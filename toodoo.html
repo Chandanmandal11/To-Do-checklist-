@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do List and Notes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+ 
+
+  <h1>To-Do List</h1>
+  <form id="task-form">
+    <input type="text" id="task-input" placeholder="Add a task">
+    <button type="submit">Add Task</button>
+  </form>
+  <div class="tasks">
+    <h2>Pending Tasks</h2>
+    <ul id="pending-tasks"></ul>
+  </div>
+  <div class="tasks">
+    <h2>Completed Tasks</h2>
+    <ul id="completed-tasks"></ul>
+  </div>
+  <h1>Notes</h1>
+  <form id="note-form">
+    <textarea id="note-input" placeholder="Add a note"></textarea>
+    <button type="submit">Add Note</button>
+  </form>
+  <ul id="notes"></ul>
+  
+  <script>
+const taskForm = document.getElementById('task-form');
+const taskInput = document.getElementById('task-input');
+const pendingTasksList = document.getElementById('pending-tasks');
+const completedTasksList = document.getElementById('completed-tasks');
+
+const noteForm = document.getElementById('note-form');
+const noteInput = document.getElementById('note-input');
+const notesList = document.getElementById('notes');
+
+taskForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const task = taskInput.value.trim();
+  if (task !== '') {
+    addTask(task);
+    taskInput.value = '';
+  }
+});
+
+noteForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const note = noteInput.value.trim();
+  if (note !== '') {
+    addNote(note);
+    noteInput.value = '';
+  }
+});
+
+function addTask(task) {
+  const listItem = document.createElement('li');
+  listItem.innerHTML = `
+    <div class="task-item">
+      <span>${task}</span>
+      <div class="task-actions">
+        <button class="complete-button">Complete</button>
+        <button class="edit-button">Edit</button>
+        <button class="delete-button">Delete</button>
+      </div>
+    </div>
+    <small>${getCurrentDateTime()}</small>
+  `;
+  listItem.querySelector('.complete-button').addEventListener('click', completeTask);
+  listItem.querySelector('.edit-button').addEventListener('click', editTask);
+  listItem.querySelector('.delete-button').addEventListener('click', deleteTask);
+
+  pendingTasksList.appendChild(listItem);
+}
+
+function completeTask() {
+  const listItem = this.closest('li');
+  listItem.querySelector('.complete-button').remove();
+  listItem.classList.add('completed');
+  completedTasksList.appendChild(listItem);
+}
+
+function editTask() {
+  const taskItem = this.closest('.task-item');
+  const taskText = taskItem.querySelector('span');
+  const newTask = prompt('Edit task:', taskText.textContent);
+  if (newTask !== null && newTask.trim() !== '') {
+    taskText.textContent = newTask.trim();
+    const dateTime = taskItem.nextElementSibling;
+    dateTime.textContent = getCurrentDateTime();
+  }
+}
+
+function deleteTask() {
+  const listItem = this.closest('li');
+  listItem.remove();
+}
+
+function addNote(note) {
+  const noteItem = document.createElement('li');
+  noteItem.textContent = note;
+  notesList.appendChild(noteItem);
+}
+
+
+function getCurrentDateTime() {
+  const now = new Date();
+  const date = now.toLocaleDateString();
+  const time = now.toLocaleTimeString();
+  return `${date} ${time}`;
+}
+
+</script>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f2f2f2;
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.tasks {
+  margin-bottom: 20px;
+  color:#000000;
+
+}
+
+h2 {
+  margin: 0;
+  font-size: 20px;
+
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-item .task-actions {
+  display: flex;
+}
+
+.task-item .task-actions button {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+#task-form, #note-form {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#task-form input[type="text"], #note-form textarea {
+  flex: 1;
+  padding: 5px;
+  font-size: 16px;
+}
+
+#task-form button, #note-form button {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+</style>
+</body>
+</html>

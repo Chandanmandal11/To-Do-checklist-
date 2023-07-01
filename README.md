@@ -8,6 +8,7 @@ const noteForm = document.getElementById('note-form');
 const noteInput = document.getElementById('note-input');
 const notesList = document.getElementById('notes');
 
+  
 taskForm.addEventListener('submit', function (e) {
   e.preventDefault();
   const task = taskInput.value.trim();
